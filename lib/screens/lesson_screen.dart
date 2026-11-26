@@ -400,93 +400,101 @@ class _QuizStep extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(19),
       decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(28)),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text('Nghe từ tiếng Anh và chọn hình đúng',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: AppColors.ink, fontSize: 17, fontWeight: FontWeight.w900)),
-          const SizedBox(height: 15),
-          InkWell(
-            onTap: onListen,
-            borderRadius: BorderRadius.circular(40),
-            child: Container(
-              width: 76,
-              height: 76,
-              decoration: const BoxDecoration(color: AppColors.paleBlue, shape: BoxShape.circle),
-              child: const Icon(Icons.volume_up_rounded, color: AppColors.blue, size: 38),
-            ),
-          ),
-          const SizedBox(height: 6),
-          const Text('Chạm để nghe lại', style: TextStyle(color: AppColors.muted, fontSize: 10)),
-          const SizedBox(height: 20),
-          Row(
-            children: List.generate(choices.length, (index) {
-              final selected = selectedIndex == index;
-              final isAnswer = choices[index].word == word.word;
-              final showCorrect = selectedIndex != null && isAnswer;
-              final wrongChoice = selected && !isAnswer;
-              final background = showCorrect
-                  ? AppColors.paleMint
-                  : wrongChoice
-                      ? AppColors.palePink
-                      : AppColors.canvas;
-              final border = showCorrect
-                  ? AppColors.mint
-                  : wrongChoice
-                      ? AppColors.coral
-                      : Colors.transparent;
-
-              return Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(right: index == choices.length - 1 ? 0 : 8),
-                  child: InkWell(
-                    onTap: selectedIndex == null ? () => onChoose(index) : null,
-                    borderRadius: BorderRadius.circular(19),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 180),
-                      height: 118,
-                      decoration: BoxDecoration(
-                        color: background,
-                        borderRadius: BorderRadius.circular(19),
-                        border: Border.all(color: border, width: 2),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(choices[index].emoji, style: const TextStyle(fontSize: 39)),
-                          const SizedBox(height: 7),
-                          Text(choices[index].meaning,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(color: AppColors.ink, fontSize: 10, fontWeight: FontWeight.w800)),
-                        ],
-                      ),
-                    ),
+      child: LayoutBuilder(
+        builder: (context, constraints) => SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Nghe từ tiếng Anh và chọn hình đúng',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: AppColors.ink, fontSize: 17, fontWeight: FontWeight.w900)),
+                const SizedBox(height: 15),
+                InkWell(
+                  onTap: onListen,
+                  borderRadius: BorderRadius.circular(40),
+                  child: Container(
+                    width: 76,
+                    height: 76,
+                    decoration: const BoxDecoration(color: AppColors.paleBlue, shape: BoxShape.circle),
+                    child: const Icon(Icons.volume_up_rounded, color: AppColors.blue, size: 38),
                   ),
                 ),
-              );
-            }),
-          ),
-          if (selectedIndex != null) ...[
-            const SizedBox(height: 17),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(correct ? 'Chính xác!' : 'Gần đúng rồi!',
-                    style: TextStyle(
-                      color: correct ? const Color(0xFF22A879) : AppColors.orange,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w900,
-                    )),
-                const SizedBox(width: 7),
-                Text(correct ? '🎉' : '💛', style: const TextStyle(fontSize: 18)),
+                const SizedBox(height: 6),
+                const Text('Chạm để nghe lại', style: TextStyle(color: AppColors.muted, fontSize: 10)),
+                const SizedBox(height: 20),
+                Row(
+                  children: List.generate(choices.length, (index) {
+                    final selected = selectedIndex == index;
+                    final isAnswer = choices[index].word == word.word;
+                    final showCorrect = selectedIndex != null && isAnswer;
+                    final wrongChoice = selected && !isAnswer;
+                    final background = showCorrect
+                        ? AppColors.paleMint
+                        : wrongChoice
+                            ? AppColors.palePink
+                            : AppColors.canvas;
+                    final border = showCorrect
+                        ? AppColors.mint
+                        : wrongChoice
+                            ? AppColors.coral
+                            : Colors.transparent;
+
+                    return Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(right: index == choices.length - 1 ? 0 : 8),
+                        child: InkWell(
+                          onTap: selectedIndex == null ? () => onChoose(index) : null,
+                          borderRadius: BorderRadius.circular(19),
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 180),
+                            height: 118,
+                            decoration: BoxDecoration(
+                              color: background,
+                              borderRadius: BorderRadius.circular(19),
+                              border: Border.all(color: border, width: 2),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(choices[index].emoji, style: const TextStyle(fontSize: 39)),
+                                const SizedBox(height: 7),
+                                Text(choices[index].meaning,
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(color: AppColors.ink, fontSize: 10, fontWeight: FontWeight.w800)),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+                ),
+                if (selectedIndex != null) ...[
+                  const SizedBox(height: 17),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(correct ? 'Chính xác!' : 'Gần đúng rồi!',
+                          style: TextStyle(
+                            color: correct ? const Color(0xFF22A879) : AppColors.orange,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w900,
+                          )),
+                      const SizedBox(width: 7),
+                      Text(correct ? '🎉' : '💛', style: const TextStyle(fontSize: 18)),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(correct ? 'Milo tự hào về bé!' : 'Mình thử lại một lần nữa nhé.',
+                      style: const TextStyle(color: AppColors.muted, fontSize: 11)),
+                ],
               ],
             ),
-            const SizedBox(height: 4),
-            Text(correct ? 'Milo tự hào về bé!' : 'Mình thử lại một lần nữa nhé.',
-                style: const TextStyle(color: AppColors.muted, fontSize: 11)),
-          ],
-        ],
+          ),
+        ),
       ),
     );
   }
@@ -523,91 +531,100 @@ class _BuildWordStep extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(19),
       decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(28)),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text('Ghép các chữ cái để tạo thành từ',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: AppColors.ink, fontSize: 17, fontWeight: FontWeight.w900)),
-          const SizedBox(height: 12),
-          Text(word.emoji, style: const TextStyle(fontSize: 67)),
-          const SizedBox(height: 4),
-          Text(word.meaning,
-              style: const TextStyle(color: AppColors.muted, fontSize: 13, fontWeight: FontWeight.w700)),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(letters.length, (index) {
-              final filled = index < builtWord.length;
-              return Container(
-                width: 43,
-                height: 50,
-                margin: const EdgeInsets.symmetric(horizontal: 3),
-                decoration: BoxDecoration(
-                  color: filled ? topic.softColor : AppColors.canvas,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: filled ? topic.color : const Color(0xFFE5EAF0), width: 1.5),
+      child: LayoutBuilder(
+        builder: (context, constraints) => SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Ghép các chữ cái để tạo thành từ',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: AppColors.ink, fontSize: 17, fontWeight: FontWeight.w900)),
+                const SizedBox(height: 12),
+                Text(word.emoji, style: const TextStyle(fontSize: 67)),
+                const SizedBox(height: 4),
+                Text(word.meaning,
+                    style: const TextStyle(color: AppColors.muted, fontSize: 13, fontWeight: FontWeight.w700)),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(letters.length, (index) {
+                    final filled = index < builtWord.length;
+                    return Container(
+                      width: 43,
+                      height: 50,
+                      margin: const EdgeInsets.symmetric(horizontal: 3),
+                      decoration: BoxDecoration(
+                        color: filled ? topic.softColor : AppColors.canvas,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: filled ? topic.color : const Color(0xFFE5EAF0), width: 1.5),
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        filled ? builtWord[index] : '',
+                        style: TextStyle(color: topic.color, fontSize: 21, fontWeight: FontWeight.w900),
+                      ),
+                    );
+                  }),
                 ),
-                alignment: Alignment.center,
-                child: Text(
-                  filled ? builtWord[index] : '',
-                  style: TextStyle(color: topic.color, fontSize: 21, fontWeight: FontWeight.w900),
+                const SizedBox(height: 22),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 8,
+                  runSpacing: 9,
+                  children: List.generate(letters.length, (index) {
+                    final used = selectedTileIndexes.contains(index);
+                    return InkWell(
+                      key: ValueKey('letter-tile-$index'),
+                      onTap: used ? null : () => onTapLetter(index),
+                      borderRadius: BorderRadius.circular(14),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 160),
+                        width: 46,
+                        height: 52,
+                        decoration: BoxDecoration(
+                          color: used ? const Color(0xFFF0F3F7) : topic.softColor,
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: used ? const Color(0xFFE7EBF0) : topic.color.withOpacity(.25), width: 1.5),
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          used ? '' : letters[index],
+                          style: TextStyle(color: topic.color, fontSize: 21, fontWeight: FontWeight.w900),
+                        ),
+                      ),
+                    );
+                  }),
                 ),
-              );
-            }),
-          ),
-          const SizedBox(height: 22),
-          Wrap(
-            alignment: WrapAlignment.center,
-            spacing: 8,
-            runSpacing: 9,
-            children: List.generate(letters.length, (index) {
-              final used = selectedTileIndexes.contains(index);
-              return InkWell(
-                key: ValueKey('letter-tile-$index'),
-                onTap: used ? null : () => onTapLetter(index),
-                borderRadius: BorderRadius.circular(14),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 160),
-                  width: 46,
-                  height: 52,
-                  decoration: BoxDecoration(
-                    color: used ? const Color(0xFFF0F3F7) : topic.softColor,
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: used ? const Color(0xFFE7EBF0) : topic.color.withOpacity(.25), width: 1.5),
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    used ? '' : letters[index],
-                    style: TextStyle(color: topic.color, fontSize: 21, fontWeight: FontWeight.w900),
-                  ),
+                const SizedBox(height: 12),
+                if (isCorrect)
+                  const Text('Chính xác! Bé ghép từ thật giỏi! 🎉',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Color(0xFF22A879), fontSize: 13, fontWeight: FontWeight.w900))
+                else if (isFull)
+                  const Text('Gần đúng rồi! Mình thử lại nhé 💛',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: AppColors.orange, fontSize: 12, fontWeight: FontWeight.w800))
+                else
+                  const Text('Chạm vào từng chữ cái để xếp từ nhé.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: AppColors.muted, fontSize: 11, fontWeight: FontWeight.w700)),
+                TextButton.icon(
+                  onPressed: selectedTileIndexes.isEmpty ? null : onUndo,
+                  icon: const Icon(Icons.undo_rounded, size: 16),
+                  label: const Text('Lùi một chữ'),
                 ),
-              );
-            }),
+              ],
+            ),
           ),
-          const SizedBox(height: 12),
-          if (isCorrect)
-            const Text('Chính xác! Bé ghép từ thật giỏi! 🎉',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Color(0xFF22A879), fontSize: 13, fontWeight: FontWeight.w900))
-          else if (isFull)
-            const Text('Gần đúng rồi! Mình thử lại nhé 💛',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: AppColors.orange, fontSize: 12, fontWeight: FontWeight.w800))
-          else
-            const Text('Chạm vào từng chữ cái để xếp từ nhé.',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: AppColors.muted, fontSize: 11, fontWeight: FontWeight.w700)),
-          TextButton.icon(
-            onPressed: selectedTileIndexes.isEmpty ? null : onUndo,
-            icon: const Icon(Icons.undo_rounded, size: 16),
-            label: const Text('Lùi một chữ'),
-          ),
-        ],
+        ),
       ),
     );
   }
 }
+
 
 class _CompleteStep extends StatelessWidget {
   const _CompleteStep({super.key, required this.topic, required this.rewarded, required this.onContinue});
