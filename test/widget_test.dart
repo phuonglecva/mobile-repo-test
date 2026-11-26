@@ -78,6 +78,10 @@ void main() {
     await store.completeTopic(topicId: lessonTopics.first.id, words: 5);
 
     expect(store.xp, 25);
+    expect(store.stars, 3);
+    expect(store.coins, 10);
     expect(store.lessonsCompleted, 1);
+    expect(store.dailyLessons, 2);
+    expect(store.weeklyLessons, 2);
   });
 }
