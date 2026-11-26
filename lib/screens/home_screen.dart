@@ -271,27 +271,142 @@ class _AdventurePath extends StatelessWidget {
   final String? nextTopicId;
   final ValueChanged<LessonTopic> onTopicTap;
 
+  static const _xPattern = [0.50, 0.72, 0.50, 0.28, 0.50, 0.72];
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: List.generate(lessonTopics.length, (index) {
-        final topic = lessonTopics[index];
-        final completed = completedIds.contains(topic.id);
-        final unlocked = completed || index == 0 || completedIds.contains(lessonTopics[index - 1].id);
-        final current = topic.id == nextTopicId;
-
-        return _AdventureNode(
-          topic: topic,
-          completed: completed,
-          unlocked: unlocked,
-          current: current,
-          alignRight: index.isOdd,
-          isLast: index == lessonTopics.length - 1,
-          onTap: unlocked ? () => onTopicTap(topic) : null,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
+        final centers = List.generate(
+          lessonTopics.length,
+          (index) => Offset(
+            width * _xPattern[index % _xPattern.length],
+            54 + index * 116,
+          ),
         );
-      }),
+        final height = 112 + (lessonTopics.length - 1) * 116;
+        final labelWidth = width * .34;
+
+        return SizedBox(
+          height: height,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Positioned.fill(
+                child: CustomPaint(
+                  painter: _AdventureNodePainter(
+                    centers: centers,
+                    topics: lessonTopics,
+                    completedIds: completedIds,
+                  ),
+                ),
+              ),
+              for (var index = 0; index < lessonTopics.length; index++)
+                Builder(
+                  builder: (context) {
+                    final topic = lessonTopics[index];
+                    final completed = completedIds.contains(topic.id);
+                    final unlocked = completed ||
+                        index == 0 ||
+                        completedIds.contains(lessonTopics[index - 1].id);
+                    final current = topic.id == nextTopicId;
+                    final center = centers[index];
+                    final nodeSize = current ? 78.0 : 66.0;
+                    final labelOnRight = center.dx < width * .5 ||
+                        (center.dx == width * .5 && index.isOdd);
+                    final labelLeft = labelOnRight
+                        ? center.dx + nodeSize / 2 + 6
+                        : center.dx - nodeSize / 2 - 6 - labelWidth;
+
+                    return Stack(
+                      children: [
+                        Positioned(
+                          left: center.dx - nodeSize / 2,
+                          top: center.dy - nodeSize / 2,
+                          child: _AdventureNode(
+                            topic: topic,
+                            completed: completed,
+                            unlocked: unlocked,
+                            current: current,
+                            onTap: unlocked ? () => onTopicTap(topic) : null,
+                          ),
+                        ),
+                        Positioned(
+                          left: labelLeft.clamp(0.0, width - labelWidth),
+                          top: center.dy - 31,
+                          width: labelWidth,
+                          child: _AdventureNodeLabel(
+                            topic: topic,
+                            completed: completed,
+                            unlocked: unlocked,
+                            current: current,
+                            alignRight: labelOnRight,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+            ],
+          ),
+        );
+      },
     );
   }
+}
+
+class _AdventureNodePainter extends CustomPainter {
+  const _AdventureNodePainter({
+    required this.centers,
+    required this.topics,
+    required this.completedIds,
+  });
+
+  final List<Offset> centers;
+  final List<LessonTopic> topics;
+  final Set<String> completedIds;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final basePaint = Paint()
+      ..color = const Color(0xFFDCE8F1)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 8
+      ..strokeCap = StrokeCap.round;
+
+    final completedPaint = Paint()
+      ..color = AppColors.mint
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 8
+      ..strokeCap = StrokeCap.round;
+
+    final dotPaint = Paint()..color = Colors.white;
+
+    for (var index = 0; index < centers.length - 1; index++) {
+      final start = centers[index];
+      final end = centers[index + 1];
+      final middleY = (start.dy + end.dy) / 2;
+      final path = Path()
+        ..moveTo(start.dx, start.dy)
+        ..cubicTo(start.dx, middleY, end.dx, middleY, end.dx, end.dy);
+
+      canvas.drawPath(path, basePaint);
+      if (completedIds.contains(topics[index].id)) {
+        canvas.drawPath(path, completedPaint);
+      }
+
+      for (final metric in path.computeMetrics()) {
+        for (var distance = 18.0; distance < metric.length; distance += 28) {
+          final tangent = metric.getTangentForOffset(distance);
+          if (tangent != null) canvas.drawCircle(tangent.position, 2.2, dotPaint);
+        }
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _AdventureNodePainter oldDelegate) => true;
 }
 
 class _AdventureNode extends StatelessWidget {
@@ -300,8 +415,6 @@ class _AdventureNode extends StatelessWidget {
     required this.completed,
     required this.unlocked,
     required this.current,
-    required this.alignRight,
-    required this.isLast,
     required this.onTap,
   });
 
@@ -309,97 +422,119 @@ class _AdventureNode extends StatelessWidget {
   final bool completed;
   final bool unlocked;
   final bool current;
-  final bool alignRight;
-  final bool isLast;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    final node = InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(50),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 260),
-        width: current ? 78 : 66,
-        height: current ? 78 : 66,
-        decoration: BoxDecoration(
-          color: completed ? AppColors.mint : unlocked ? topic.color : const Color(0xFFE6EAF0),
-          shape: BoxShape.circle,
-          border: Border.all(color: Colors.white, width: current ? 5 : 4),
-          boxShadow: [
-            BoxShadow(
-              color: (current ? topic.color : AppColors.ink).withOpacity(current ? .25 : .08),
-              blurRadius: current ? 18 : 9,
-              offset: const Offset(0, 5),
-            ),
-          ],
-        ),
-        alignment: Alignment.center,
-        child: completed
-            ? const Icon(Icons.check_rounded, color: Colors.white, size: 31)
-            : unlocked
-                ? Text(topic.emoji, style: TextStyle(fontSize: current ? 31 : 26))
-                : const Icon(Icons.lock_rounded, color: Color(0xFF9BA6B5), size: 24),
-      ),
-    );
-
-    final label = Column(
-        crossAxisAlignment: alignRight ? CrossAxisAlignment.start : CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(topic.title,
-              textAlign: alignRight ? TextAlign.left : TextAlign.right,
-              style: TextStyle(color: unlocked ? AppColors.ink : AppColors.muted, fontSize: 13, fontWeight: FontWeight.w900)),
-          const SizedBox(height: 3),
-          Text(
-            completed ? 'ĐÃ HOÀN THÀNH' : current ? 'BÀI TIẾP THEO' : unlocked ? topic.subtitle : 'Mở khóa sau',
-            textAlign: alignRight ? TextAlign.left : TextAlign.right,
-            style: TextStyle(
-              color: completed ? const Color(0xFF22A879) : current ? topic.color : AppColors.muted,
-              fontSize: 8,
-              letterSpacing: .4,
-              fontWeight: FontWeight.w900,
-            ),
-          ),
-          if (current) ...[
-            const SizedBox(height: 7),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
-              decoration: BoxDecoration(color: topic.softColor, borderRadius: BorderRadius.circular(20)),
-              child: Text('CHƠI NGAY  ›',
-                  style: TextStyle(color: topic.color, fontSize: 8, fontWeight: FontWeight.w900)),
-            ),
-          ],
-        ],
-      );
-
-    return SizedBox(
-      height: isLast ? 96 : 116,
-      child: Row(
-        children: [
-          Expanded(child: alignRight ? const SizedBox() : label),
-          const SizedBox(width: 15),
-          Column(
-            children: [
-              const SizedBox(height: 2),
-              node,
-              if (!isLast)
-                Expanded(
-                  child: Container(
-                    width: 4,
-                    margin: const EdgeInsets.symmetric(vertical: 5),
-                    decoration: BoxDecoration(
-                      color: completed ? AppColors.mint : const Color(0xFFDCE8F1),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                  ),
-                ),
+    final size = current ? 78.0 : 66.0;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(50),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 260),
+          curve: Curves.easeOutBack,
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            color: completed
+                ? AppColors.mint
+                : unlocked
+                    ? topic.color
+                    : const Color(0xFFE6EAF0),
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white, width: current ? 5 : 4),
+            boxShadow: [
+              BoxShadow(
+                color: (current ? topic.color : AppColors.ink)
+                    .withOpacity(current ? .25 : .08),
+                blurRadius: current ? 18 : 9,
+                offset: const Offset(0, 5),
+              ),
             ],
           ),
-          const SizedBox(width: 15),
-          Expanded(child: alignRight ? label : const SizedBox()),
-        ],
+          alignment: Alignment.center,
+          child: completed
+              ? const Icon(Icons.check_rounded, color: Colors.white, size: 31)
+              : unlocked
+                  ? Text(topic.emoji, style: TextStyle(fontSize: current ? 31 : 26))
+                  : const Icon(Icons.lock_rounded, color: Color(0xFF9BA6B5), size: 24),
+        ),
       ),
     );
   }
 }
+
+class _AdventureNodeLabel extends StatelessWidget {
+  const _AdventureNodeLabel({
+    required this.topic,
+    required this.completed,
+    required this.unlocked,
+    required this.current,
+    required this.alignRight,
+  });
+
+  final LessonTopic topic;
+  final bool completed;
+  final bool unlocked;
+  final bool current;
+  final bool alignRight;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment:
+          alignRight ? CrossAxisAlignment.start : CrossAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          topic.title,
+          textAlign: alignRight ? TextAlign.left : TextAlign.right,
+          style: TextStyle(
+            color: unlocked ? AppColors.ink : AppColors.muted,
+            fontSize: 13,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+        const SizedBox(height: 3),
+        Text(
+          completed
+              ? 'ĐÃ HOÀN THÀNH'
+              : current
+                  ? 'BÀI TIẾP THEO'
+                  : unlocked
+                      ? topic.subtitle
+                      : 'Mở khóa sau',
+          textAlign: alignRight ? TextAlign.left : TextAlign.right,
+          style: TextStyle(
+            color: completed
+                ? const Color(0xFF22A879)
+                : current
+                    ? topic.color
+                    : AppColors.muted,
+            fontSize: 8,
+            letterSpacing: .4,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+        if (current) ...[
+          const SizedBox(height: 7),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+            decoration: BoxDecoration(
+              color: topic.softColor,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              'CHƠI NGAY  ›',
+              style: TextStyle(color: topic.color, fontSize: 8, fontWeight: FontWeight.w900),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
