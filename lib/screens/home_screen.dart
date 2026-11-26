@@ -4,8 +4,6 @@ import '../data/lesson_data.dart';
 import '../state/progress_store.dart';
 import '../theme/app_colors.dart';
 import '../widgets/milo_avatar.dart';
-import '../widgets/section_title.dart';
-import '../widgets/stat_pill.dart';
 import 'lesson_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -167,7 +165,7 @@ class _ContinueCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  allDone ? 'Bé đã chinh phục\nmọi thế giới!' : 'Sẵn sàng khám phá\nthế giới ${topic.title}?',
+                  allDone ? 'Bé đã chinh phục\nmọi thế giới!' : 'Sẵn sàng khám phá\nthế giới ${topic?.title ?? ''}?',
                   style: const TextStyle(color: Colors.white, fontSize: 21, height: 1.12, fontWeight: FontWeight.w900),
                 ),
                 const SizedBox(height: 7),
