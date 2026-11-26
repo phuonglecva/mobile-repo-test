@@ -18,7 +18,7 @@ Milo English is a local-first Flutter app. The MVP has no backend, login or netw
 1. First launch opens child-friendly onboarding.
 2. The child chooses a display name, grade (1–5) and companion avatar.
 3. The adventure map becomes the home screen and highlights one next available world.
-4. A world contains a short learn phase followed by a listening picture quiz.
+4. A world contains a picture-led learn phase, a listening picture quiz and a short word-building exercise.
 5. Correct answers receive immediate positive feedback; incorrect answers can be retried.
 6. Completing a world awards 3 stars, 10 coins and 25 XP, then unlocks the next world.
 7. Practice allows replay; Profile shows progress and streaks.
