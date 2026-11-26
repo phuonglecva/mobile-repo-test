@@ -6,6 +6,7 @@ import 'package:milo_english/data/lesson_data.dart';
 import 'package:milo_english/state/progress_store.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   setUp(() async {
     SharedPreferences.setMockInitialValues({});
     await ProgressStore.instance.init();
