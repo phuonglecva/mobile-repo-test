@@ -63,15 +63,15 @@ class ProgressStore extends ChangeNotifier {
   Future<void> init() async {
     _prefs = await SharedPreferences.getInstance();
     _isOnboarded = _prefs.getBool(_onboardedKey) ?? false;
-    _childName = _prefs.getString(_nameKey) ?? _childName;
-    _grade = _prefs.getInt(_gradeKey) ?? _grade;
-    _avatarIndex = _prefs.getInt(_avatarKey) ?? _avatarIndex;
-    _stars = _prefs.getInt(_starsKey) ?? _stars;
-    _coins = _prefs.getInt(_coinsKey) ?? _coins;
-    _xp = _prefs.getInt(_xpKey) ?? _xp;
-    _lessonsCompleted = _prefs.getInt(_lessonsKey) ?? _lessonsCompleted;
-    _wordsLearned = _prefs.getInt(_wordsKey) ?? _wordsLearned;
-    _streak = _prefs.getInt(_streakKey) ?? _streak;
+    _childName = _prefs.getString(_nameKey) ?? 'Minh Anh';
+    _grade = _prefs.getInt(_gradeKey) ?? 2;
+    _avatarIndex = _prefs.getInt(_avatarKey) ?? 0;
+    _stars = _prefs.getInt(_starsKey) ?? 0;
+    _coins = _prefs.getInt(_coinsKey) ?? 0;
+    _xp = _prefs.getInt(_xpKey) ?? 0;
+    _lessonsCompleted = _prefs.getInt(_lessonsKey) ?? 0;
+    _wordsLearned = _prefs.getInt(_wordsKey) ?? 0;
+    _streak = _prefs.getInt(_streakKey) ?? 0;
     _lastStudyDate = _prefs.getString(_lastStudyKey) ?? '';
     _dailyLessons = _prefs.getInt(_dailyLessonsKey) ?? 0;
     _weekKey = _prefs.getString(_weekStorageKey) ?? '';
