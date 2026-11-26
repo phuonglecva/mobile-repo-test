@@ -42,7 +42,7 @@ const List<LessonTopic> lessonTopics = [
   LessonTopic(
     id: 'alphabet',
     title: 'Bảng chữ cái',
-    subtitle: 'A, B, C thật vui',
+    subtitle: 'A đến E thật vui',
     emoji: '🔤',
     color: AppColors.blue,
     softColor: AppColors.paleBlue,
@@ -50,12 +50,14 @@ const List<LessonTopic> lessonTopics = [
       VocabularyWord(word: 'Apple', meaning: 'Quả táo', emoji: '🍎', example: 'A is for apple.'),
       VocabularyWord(word: 'Ball', meaning: 'Quả bóng', emoji: '⚽', example: 'This is a ball.'),
       VocabularyWord(word: 'Cat', meaning: 'Con mèo', emoji: '🐱', example: 'C is for cat.'),
+      VocabularyWord(word: 'Dog', meaning: 'Con chó', emoji: '🐶', example: 'D is for dog.'),
+      VocabularyWord(word: 'Egg', meaning: 'Quả trứng', emoji: '🥚', example: 'I like eggs.'),
     ],
   ),
   LessonTopic(
     id: 'numbers',
     title: 'Số đếm',
-    subtitle: 'Đếm từ 1 đến 10',
+    subtitle: 'Đếm từ 1 đến 5',
     emoji: '🔢',
     color: AppColors.orange,
     softColor: AppColors.paleYellow,
@@ -63,6 +65,8 @@ const List<LessonTopic> lessonTopics = [
       VocabularyWord(word: 'One', meaning: 'Số một', emoji: '1️⃣', example: 'I have one ball.'),
       VocabularyWord(word: 'Two', meaning: 'Số hai', emoji: '2️⃣', example: 'I see two birds.'),
       VocabularyWord(word: 'Three', meaning: 'Số ba', emoji: '3️⃣', example: 'Three little cats.'),
+      VocabularyWord(word: 'Four', meaning: 'Số bốn', emoji: '4️⃣', example: 'I see four stars.'),
+      VocabularyWord(word: 'Five', meaning: 'Số năm', emoji: '5️⃣', example: 'Five little ducks.'),
     ],
   ),
   LessonTopic(
@@ -76,6 +80,8 @@ const List<LessonTopic> lessonTopics = [
       VocabularyWord(word: 'Red', meaning: 'Màu đỏ', emoji: '❤️', example: 'The apple is red.'),
       VocabularyWord(word: 'Blue', meaning: 'Màu xanh dương', emoji: '💙', example: 'The sky is blue.'),
       VocabularyWord(word: 'Yellow', meaning: 'Màu vàng', emoji: '💛', example: 'The sun is yellow.'),
+      VocabularyWord(word: 'Green', meaning: 'Màu xanh lá', emoji: '💚', example: 'The leaf is green.'),
+      VocabularyWord(word: 'Pink', meaning: 'Màu hồng', emoji: '🩷', example: 'The flower is pink.'),
     ],
   ),
   LessonTopic(
@@ -104,6 +110,8 @@ const List<LessonTopic> lessonTopics = [
       VocabularyWord(word: 'Mother', meaning: 'Mẹ', emoji: '👩', example: 'This is my mother.'),
       VocabularyWord(word: 'Father', meaning: 'Bố', emoji: '👨', example: 'This is my father.'),
       VocabularyWord(word: 'Baby', meaning: 'Em bé', emoji: '👶', example: 'The baby is happy.'),
+      VocabularyWord(word: 'Sister', meaning: 'Chị / em gái', emoji: '👧', example: 'I love my sister.'),
+      VocabularyWord(word: 'Brother', meaning: 'Anh / em trai', emoji: '👦', example: 'He is my brother.'),
     ],
   ),
   LessonTopic(
@@ -117,6 +125,8 @@ const List<LessonTopic> lessonTopics = [
       VocabularyWord(word: 'Milk', meaning: 'Sữa', emoji: '🥛', example: 'I like milk.'),
       VocabularyWord(word: 'Bread', meaning: 'Bánh mì', emoji: '🍞', example: 'I eat bread.'),
       VocabularyWord(word: 'Banana', meaning: 'Quả chuối', emoji: '🍌', example: 'A yellow banana.'),
+      VocabularyWord(word: 'Apple', meaning: 'Quả táo', emoji: '🍎', example: 'I eat an apple.'),
+      VocabularyWord(word: 'Rice', meaning: 'Cơm / gạo', emoji: '🍚', example: 'Rice is yummy.'),
     ],
   ),
 ];
