@@ -194,7 +194,6 @@ class _LessonScreenState extends State<LessonScreen> {
                       ),
                     _LessonPhase.quiz => _QuizStep(
                         key: const ValueKey('quiz'),
-                        topic: widget.topic,
                         word: _currentWord,
                         choices: _choices,
                         selectedIndex: _selectedIndex,
@@ -320,7 +319,6 @@ class _LearnStep extends StatelessWidget {
 class _QuizStep extends StatelessWidget {
   const _QuizStep({
     super.key,
-    required this.topic,
     required this.word,
     required this.choices,
     required this.selectedIndex,
@@ -328,7 +326,6 @@ class _QuizStep extends StatelessWidget {
     required this.onListen,
   });
 
-  final LessonTopic topic;
   final VocabularyWord word;
   final List<VocabularyWord> choices;
   final int? selectedIndex;
