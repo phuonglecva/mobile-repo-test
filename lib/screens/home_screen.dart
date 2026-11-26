@@ -17,6 +17,7 @@ class HomeScreen extends StatelessWidget {
         builder: (context, _) {
           final store = ProgressStore.instance;
           final nextTopic = store.nextTopic;
+          final suggestedTopic = nextTopic ?? store.reviewTopic;
 
           return SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(20, 14, 20, 28),
@@ -43,12 +44,12 @@ class HomeScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 _ContinueCard(
-                  topic: nextTopic,
-                  completed: store.completedTopicCount,
-                  onTap: nextTopic == null
+                  topic: suggestedTopic,
+                  allDone: nextTopic == null,
+                  onTap: suggestedTopic == null
                       ? null
                       : () => Navigator.of(context).push(MaterialPageRoute(
-                            builder: (_) => LessonScreen(topic: nextTopic),
+                            builder: (_) => LessonScreen(topic: suggestedTopic),
                           )),
                 ),
                 const SizedBox(height: 14),
@@ -129,15 +130,14 @@ class _StreakChip extends StatelessWidget {
 }
 
 class _ContinueCard extends StatelessWidget {
-  const _ContinueCard({required this.topic, required this.completed, required this.onTap});
+  const _ContinueCard({required this.topic, required this.allDone, required this.onTap});
 
   final LessonTopic? topic;
-  final int completed;
+  final bool allDone;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    final allDone = topic == null;
     return Container(
       padding: const EdgeInsets.fromLTRB(17, 18, 14, 17),
       decoration: BoxDecoration(
