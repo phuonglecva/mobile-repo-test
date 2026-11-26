@@ -12,6 +12,7 @@ A playful, guided English-learning adventure for Vietnamese primary-school child
 - Five picture-led vocabulary cards per world with Vietnamese meanings and example sentences
 - English text-to-speech for words and example sentences
 - Listening quiz with large picture choices and gentle retry feedback
+- Word-building exercise with letter tiles
 - Completion celebration: stars, coins and XP; next world unlocks
 - Practice hub to replay learned worlds
 - Child profile with progress, streaks and earned badges
