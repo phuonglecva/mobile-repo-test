@@ -26,6 +26,7 @@ class _LessonScreenState extends State<LessonScreen> {
   int? _selectedIndex;
   bool _speaking = false;
   bool _savedReward = false;
+  bool _earnedRewards = true;
 
   List<VocabularyWord> get _words => widget.topic.words;
   VocabularyWord get _currentWord => _words[_index];
@@ -107,7 +108,9 @@ class _LessonScreenState extends State<LessonScreen> {
   Future<void> _finishLesson() async {
     if (!_savedReward) {
       _savedReward = true;
-      await ProgressStore.instance.completeTopic(
+      final store = ProgressStore.instance;
+      _earnedRewards = !store.isTopicCompleted(widget.topic.id);
+      await store.completeTopic(
         topicId: widget.topic.id,
         words: _words.length,
       );
@@ -202,6 +205,7 @@ class _LessonScreenState extends State<LessonScreen> {
                     _LessonPhase.complete => _CompleteStep(
                         key: const ValueKey('complete'),
                         topic: widget.topic,
+                        rewarded: _earnedRewards,
                         onContinue: () => Navigator.of(context).pop(),
                       ),
                   },
@@ -434,9 +438,10 @@ class _QuizStep extends StatelessWidget {
 }
 
 class _CompleteStep extends StatelessWidget {
-  const _CompleteStep({super.key, required this.topic, required this.onContinue});
+  const _CompleteStep({super.key, required this.topic, required this.rewarded, required this.onContinue});
 
   final LessonTopic topic;
+  final bool rewarded;
   final VoidCallback onContinue;
 
   @override
@@ -453,26 +458,39 @@ class _CompleteStep extends StatelessWidget {
         children: [
           const MiloCharacter(size: 132, expression: MiloExpression.cheering),
           const SizedBox(height: 15),
-          const Text('BÉ GIỎI QUÁ!', style: TextStyle(color: AppColors.orange, fontSize: 12, letterSpacing: 1.3, fontWeight: FontWeight.w900)),
+          Text(rewarded ? 'BÉ GIỎI QUÁ!' : 'ÔN TẬP XUẤT SẮC',
+              style: const TextStyle(color: AppColors.orange, fontSize: 12, letterSpacing: 1.3, fontWeight: FontWeight.w900)),
           const SizedBox(height: 6),
           const Text('Chặng đường tuyệt vời!',
               textAlign: TextAlign.center,
               style: TextStyle(color: AppColors.ink, fontSize: 25, fontWeight: FontWeight.w900)),
           const SizedBox(height: 8),
-          Text('Bé đã hoàn thành ${topic.title}. Milo rất tự hào về bé!',
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: AppColors.muted, fontSize: 13, height: 1.4)),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _RewardPill(emoji: '⭐', label: '+3 sao'),
-              const SizedBox(width: 10),
-              _RewardPill(emoji: '⚡', label: '+25 XP'),
-              const SizedBox(width: 10),
-              _RewardPill(emoji: '🪙', label: '+10 xu'),
-            ],
+          Text(
+            rewarded
+                ? 'Bé đã hoàn thành ${topic.title}. Milo rất tự hào về bé!'
+                : 'Bé đã ôn lại ${topic.title}. Mỗi lần luyện tập là một bước tiến!',
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: AppColors.muted, fontSize: 13, height: 1.4),
           ),
+          const SizedBox(height: 20),
+          if (rewarded)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _RewardPill(emoji: '⭐', label: '+3 sao'),
+                const SizedBox(width: 10),
+                _RewardPill(emoji: '⚡', label: '+25 XP'),
+                const SizedBox(width: 10),
+                _RewardPill(emoji: '🪙', label: '+10 xu'),
+              ],
+            )
+          else
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
+              child: const Text('🌱 Bé đang ghi nhớ ngày càng tốt hơn!',
+                  style: TextStyle(color: AppColors.ink, fontSize: 11, fontWeight: FontWeight.w800)),
+            ),
           const SizedBox(height: 23),
           PrimaryButton(label: 'Tiếp tục hành trình', onPressed: onContinue, icon: Icons.arrow_forward_rounded),
         ],
