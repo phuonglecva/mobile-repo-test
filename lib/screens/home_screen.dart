@@ -285,7 +285,7 @@ class _AdventurePath extends StatelessWidget {
             54 + index * 116,
           ),
         );
-        final height = 112 + (lessonTopics.length - 1) * 116;
+        final height = 112.0 + (lessonTopics.length - 1) * 116.0;
         final labelWidth = width * .34;
 
         return SizedBox(
