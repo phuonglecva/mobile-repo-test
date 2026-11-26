@@ -318,64 +318,74 @@ class _LearnStep extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(28)),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('Nhìn hình và học từ mới nhé!', style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 20),
-          Container(
-            width: 174,
-            height: 174,
-            decoration: BoxDecoration(
-              color: topic.softColor,
-              borderRadius: BorderRadius.circular(44),
-            ),
-            alignment: Alignment.center,
-            child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 240),
-              child: Text(word.emoji, key: ValueKey(word.word), style: const TextStyle(fontSize: 98)),
-            ),
-          ),
-          const SizedBox(height: 20),
-          Text(word.word, style: const TextStyle(color: AppColors.ink, fontSize: 34, fontWeight: FontWeight.w900)),
-          const SizedBox(height: 4),
-          Text(word.meaning, style: const TextStyle(color: AppColors.muted, fontSize: 16, fontWeight: FontWeight.w700)),
-          const SizedBox(height: 15),
-          OutlinedButton.icon(
-            onPressed: onSpeak,
-            icon: Icon(speaking ? Icons.graphic_eq_rounded : Icons.volume_up_rounded),
-            label: Text(speaking ? 'Đang đọc...' : 'Nghe phát âm'),
-            style: OutlinedButton.styleFrom(
-              foregroundColor: AppColors.blue,
-              side: const BorderSide(color: AppColors.sky, width: 1.5),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-            ),
-          ),
-          const SizedBox(height: 17),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(13),
-            decoration: BoxDecoration(color: AppColors.paleYellow, borderRadius: BorderRadius.circular(17)),
+      child: LayoutBuilder(
+        builder: (context, constraints) => SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                const Text('CÂU VÍ DỤ', style: TextStyle(color: AppColors.orange, fontSize: 9, fontWeight: FontWeight.w900, letterSpacing: .8)),
-                const SizedBox(height: 5),
-                Text(word.example, textAlign: TextAlign.center,
-                    style: const TextStyle(color: AppColors.ink, fontWeight: FontWeight.w800, fontSize: 14)),
-                TextButton.icon(
-                  onPressed: onSpeakExample,
-                  icon: const Icon(Icons.volume_up_rounded, size: 15),
-                  label: const Text('Nghe cả câu'),
+                Text('Nhìn hình và học từ mới nhé!', style: Theme.of(context).textTheme.titleMedium),
+                const SizedBox(height: 20),
+                Container(
+                  width: 174,
+                  height: 174,
+                  decoration: BoxDecoration(
+                    color: topic.softColor,
+                    borderRadius: BorderRadius.circular(44),
+                  ),
+                  alignment: Alignment.center,
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 240),
+                    child: Text(word.emoji, key: ValueKey(word.word), style: const TextStyle(fontSize: 98)),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(word.word, style: const TextStyle(color: AppColors.ink, fontSize: 34, fontWeight: FontWeight.w900)),
+                const SizedBox(height: 4),
+                Text(word.meaning, style: const TextStyle(color: AppColors.muted, fontSize: 16, fontWeight: FontWeight.w700)),
+                const SizedBox(height: 15),
+                OutlinedButton.icon(
+                  onPressed: onSpeak,
+                  icon: Icon(speaking ? Icons.graphic_eq_rounded : Icons.volume_up_rounded),
+                  label: Text(speaking ? 'Đang đọc...' : 'Nghe phát âm'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppColors.blue,
+                    side: const BorderSide(color: AppColors.sky, width: 1.5),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+                  ),
+                ),
+                const SizedBox(height: 17),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(13),
+                  decoration: BoxDecoration(color: AppColors.paleYellow, borderRadius: BorderRadius.circular(17)),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text('CÂU VÍ DỤ', style: TextStyle(color: AppColors.orange, fontSize: 9, fontWeight: FontWeight.w900, letterSpacing: .8)),
+                      const SizedBox(height: 5),
+                      Text(word.example, textAlign: TextAlign.center,
+                          style: const TextStyle(color: AppColors.ink, fontWeight: FontWeight.w800, fontSize: 14)),
+                      TextButton.icon(
+                        onPressed: onSpeakExample,
+                        icon: const Icon(Icons.volume_up_rounded, size: 15),
+                        label: const Text('Nghe cả câu'),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
 }
+
 
 class _QuizStep extends StatelessWidget {
   const _QuizStep({
