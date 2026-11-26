@@ -9,11 +9,9 @@ class MiloBottomNav extends StatelessWidget {
   final ValueChanged<int> onTap;
 
   static const _items = [
-    (Icons.home_rounded, 'Nhà'),
-    (Icons.map_rounded, 'Học'),
-    (Icons.sports_esports_rounded, 'Chơi'),
-    (Icons.emoji_events_rounded, 'Quà'),
-    (Icons.bar_chart_rounded, 'Bé'),
+    (Icons.route_rounded, 'Hành trình'),
+    (Icons.bolt_rounded, 'Ôn tập'),
+    (Icons.face_rounded, 'Hồ sơ'),
   ];
 
   @override
@@ -29,7 +27,7 @@ class MiloBottomNav extends StatelessWidget {
       child: SafeArea(
         top: false,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(8, 9, 8, 7),
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 7),
           child: Row(
             children: List.generate(_items.length, (index) {
               final selected = currentIndex == index;
@@ -40,7 +38,7 @@ class MiloBottomNav extends StatelessWidget {
                   onTap: () => onTap(index),
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 220),
-                    curve: Curves.easeOut,
+                    curve: Curves.easeOutCubic,
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     decoration: BoxDecoration(
                       color: selected ? AppColors.paleBlue : Colors.transparent,
@@ -49,13 +47,17 @@ class MiloBottomNav extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(item.$1, color: selected ? AppColors.blue : AppColors.muted, size: 23),
+                        AnimatedScale(
+                          scale: selected ? 1.12 : 1,
+                          duration: const Duration(milliseconds: 180),
+                          child: Icon(item.$1, color: selected ? AppColors.blue : AppColors.muted, size: 23),
+                        ),
                         const SizedBox(height: 3),
                         Text(
                           item.$2,
                           style: TextStyle(
                             color: selected ? AppColors.blue : AppColors.muted,
-                            fontSize: 10,
+                            fontSize: 11,
                             fontWeight: selected ? FontWeight.w900 : FontWeight.w600,
                           ),
                         ),
