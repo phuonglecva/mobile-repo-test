@@ -29,6 +29,7 @@ A topic is a short micro-lesson:
 
 - Learn phase: 5 picture vocabulary cards (or fewer when the topic is intentionally shorter).
 - Practice phase: listen to each word and choose the matching picture.
+- Word-building phase: arrange letter tiles to build one of the new words.
 - Completion phase: positive reinforcement, rewards and a clear return to the map.
 
 The UI keeps one primary action visible at a time. Progress is shown at the top of the lesson. Audio is provided by the device's installed English TTS voice.
