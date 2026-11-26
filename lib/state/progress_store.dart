@@ -80,9 +80,12 @@ class ProgressStore extends ChangeNotifier {
       ..clear()
       ..addAll(_prefs.getStringList(_completedKey) ?? []);
 
-    final today = _dateKey(DateTime.now());
+    final now = DateTime.now();
+    final today = _dateKey(now);
     if (_lastStudyDate != today) _dailyLessons = 0;
-    final currentWeek = _weekKeyFor(DateTime.now());
+    final yesterday = _dateKey(now.subtract(const Duration(days: 1)));
+    if (_lastStudyDate != today && _lastStudyDate != yesterday) _streak = 0;
+    final currentWeek = _weekKeyFor(now);
     if (_weekKey != currentWeek) {
       _weekKey = currentWeek;
       _weeklyLessons = 0;
