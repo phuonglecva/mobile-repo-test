@@ -21,7 +21,7 @@ class ProgressStore extends ChangeNotifier {
   static const _completedKey = 'milo_completed_topics';
   static const _lastStudyKey = 'milo_last_study';
   static const _dailyLessonsKey = 'milo_daily_lessons';
-  static const _weekKey = 'milo_week_key';
+  static const _weekStorageKey = 'milo_week_key';
   static const _weeklyLessonsKey = 'milo_weekly_lessons';
 
   late SharedPreferences _prefs;
@@ -74,7 +74,7 @@ class ProgressStore extends ChangeNotifier {
     _streak = _prefs.getInt(_streakKey) ?? _streak;
     _lastStudyDate = _prefs.getString(_lastStudyKey) ?? '';
     _dailyLessons = _prefs.getInt(_dailyLessonsKey) ?? 0;
-    _weekKey = _prefs.getString(_weekKey) ?? '';
+    _weekKey = _prefs.getString(_weekStorageKey) ?? '';
     _weeklyLessons = _prefs.getInt(_weeklyLessonsKey) ?? 0;
     _completedTopics
       ..clear()
@@ -95,8 +95,8 @@ class ProgressStore extends ChangeNotifier {
     required int avatarIndex,
   }) async {
     _childName = name.trim().isEmpty ? 'Minh Anh' : name.trim();
-    _grade = grade.clamp(1, 5);
-    _avatarIndex = avatarIndex.clamp(0, 3);
+    _grade = grade.clamp(1, 5).toInt();
+    _avatarIndex = avatarIndex.clamp(0, 3).toInt();
     _isOnboarded = true;
     await _save();
     notifyListeners();
@@ -108,8 +108,8 @@ class ProgressStore extends ChangeNotifier {
     required int avatarIndex,
   }) async {
     _childName = name.trim().isEmpty ? _childName : name.trim();
-    _grade = grade.clamp(1, 5);
-    _avatarIndex = avatarIndex.clamp(0, 3);
+    _grade = grade.clamp(1, 5).toInt();
+    _avatarIndex = avatarIndex.clamp(0, 3).toInt();
     await _save();
     notifyListeners();
   }
@@ -118,7 +118,8 @@ class ProgressStore extends ChangeNotifier {
 
   bool isTopicUnlocked(String topicId) {
     final index = lessonTopics.indexWhere((topic) => topic.id == topicId);
-    if (index <= 0) return index == 0;
+    if (index < 0) return false;
+    if (index == 0) return true;
     return _completedTopics.contains(lessonTopics[index - 1].id);
   }
 
@@ -208,7 +209,7 @@ class ProgressStore extends ChangeNotifier {
     await _prefs.setStringList(_completedKey, _completedTopics.toList());
     await _prefs.setString(_lastStudyKey, _lastStudyDate);
     await _prefs.setInt(_dailyLessonsKey, _dailyLessons);
-    await _prefs.setString(_weekKey, _weekKey);
+    await _prefs.setString(_weekStorageKey, _weekKey);
     await _prefs.setInt(_weeklyLessonsKey, _weeklyLessons);
   }
 }
