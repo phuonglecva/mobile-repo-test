@@ -1,25 +1,34 @@
 # Milo English 🦊
 
-A colorful, game-inspired English learning app for Vietnamese primary-school students (ages 6–10), built with Flutter.
+A playful, guided English-learning adventure for Vietnamese primary-school children (ages 6–10), built with Flutter.
 
-Milo is a friendly fox who guides children through short beginner lessons, picture vocabulary, listening practice, mini-games and collectible rewards. The first release is local-first: no account, server or internet connection is required for the learning flow. Device text-to-speech uses an installed English voice.
+**Milo Adventure World** replaces a generic dashboard with a clear learning journey: children create a simple profile, follow a colorful map, learn five beginner words per world, play a listening game, celebrate progress and return for short reviews.
 
-## Features
+## Experience
 
-- Playful home dashboard with daily mission, streak and learning progress
-- Beginner learning path: Alphabet, Numbers, Colors, Animals, Family and Food
-- Picture-led vocabulary cards with English text-to-speech
-- Listening multiple-choice mini-game
-- Stars, coins, badges and progress summary
-- Local progress persistence with shared_preferences
-- Responsive layouts for common Android phone sizes
+- First-run onboarding: child name, grade 1–5 and companion avatar
+- Guided adventure map with current, completed and locked worlds
+- Six beginner worlds: Alphabet, Numbers, Colors, Animals, Family and Food
+- Five picture-led vocabulary cards per world with Vietnamese meanings and example sentences
+- English text-to-speech for words and example sentences
+- Listening quiz with large picture choices and gentle retry feedback
+- Completion celebration: stars, coins and XP; next world unlocks
+- Practice hub to replay learned worlds
+- Child profile with progress, streaks and earned badges
+- Local progress persistence; no backend or account required for MVP
+- Custom vector-drawn Milo fox mascot and animated UI transitions
+
+## Navigation
+
+- **Hành trình** — the main learning path and one highlighted next lesson
+- **Ôn tập** — review a completed topic
+- **Hồ sơ** — learner progress and parent-friendly summary
 
 ## Tech stack
 
-- Flutter / Dart
-- Material 3 with a custom colorful design system
-- flutter_tts for pronunciation
-- shared_preferences for local progress
+- Flutter / Dart with Material 3
+- flutter_tts for pronunciation using the device's installed voice
+- shared_preferences for local profile and progress
 
 ## Quick start
 
@@ -30,9 +39,9 @@ Milo is a friendly fox who guides children through short beginner lessons, pictu
    - Windows PowerShell: .\scripts\bootstrap_android.ps1
 4. Run flutter pub get, then flutter run.
 
-See docs/GETTING_STARTED.md, docs/ARCHITECTURE.md and docs/BUILD_APK.md for complete instructions.
+See docs/GETTING_STARTED.md, docs/UX_JOURNEY.md, docs/ARCHITECTURE.md and docs/BUILD_APK.md.
 
-## Android APK
+## Build Android APK
 
 ~~~bash
 flutter build apk --release
@@ -58,4 +67,4 @@ A GitHub Actions workflow builds the release APK on pushes to main and uploads i
 
 ## Design direction
 
-Milo English uses a bright sky-blue, sunshine-yellow, tangerine and mint palette, large rounded controls, friendly illustrations and game-like progress feedback. Interface copy is Vietnamese; target vocabulary and example sentences are beginner English.
+A bright sky-blue, vivid-blue, sunshine-yellow, tangerine, mint and lavender palette; rounded child-friendly controls; expressive custom Milo fox illustration; large touch targets; Vietnamese guidance; and short beginner English learning activities.
