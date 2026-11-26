@@ -343,9 +343,7 @@ class _AdventureNode extends StatelessWidget {
       ),
     );
 
-    final label = SizedBox(
-      width: 112,
-      child: Column(
+    final label = Column(
         crossAxisAlignment: alignRight ? CrossAxisAlignment.start : CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -373,8 +371,7 @@ class _AdventureNode extends StatelessWidget {
             ),
           ],
         ],
-      ),
-    );
+      );
 
     return SizedBox(
       height: isLast ? 96 : 116,
