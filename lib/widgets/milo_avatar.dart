@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../theme/app_colors.dart';
+import 'milo_character.dart';
 
 class MiloAvatar extends StatelessWidget {
   const MiloAvatar({super.key, this.size = 72, this.showSparkles = true});
@@ -10,38 +10,25 @@ class MiloAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: size + 12,
-      height: size + 12,
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Container(
-            width: size,
-            height: size,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFFFFD98A), AppColors.orange],
-              ),
-              border: Border.all(color: Colors.white, width: 4),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.orange.withOpacity(.22),
-                  blurRadius: 14,
-                  offset: const Offset(0, 7),
-                ),
-              ],
-            ),
-            alignment: Alignment.center,
-            child: Text('🦊', style: TextStyle(fontSize: size * .58)),
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Container(
+          width: size,
+          height: size,
+          padding: const EdgeInsets.all(3),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(color: const Color(0xFFFF934F).withOpacity(.2), blurRadius: 12, offset: const Offset(0, 5)),
+            ],
           ),
-          if (showSparkles)
-            const Positioned(right: -1, top: -2, child: Text('✨', style: TextStyle(fontSize: 19))),
-        ],
-      ),
+          child: MiloCharacter(size: size - 6),
+        ),
+        if (showSparkles)
+          const Positioned(right: -2, top: -4, child: Text('✨', style: TextStyle(fontSize: 18))),
+      ],
     );
   }
 }
