@@ -18,6 +18,7 @@ void main() {
     expect(find.text('Chào mừng đến\nMilo World! 🌈'), findsOneWidget);
     expect(find.text('Bắt đầu hành trình'), findsOneWidget);
 
+    await tester.ensureVisible(find.text('Bắt đầu hành trình'));
     await tester.tap(find.text('Bắt đầu hành trình'));
     await tester.pumpAndSettle();
 
