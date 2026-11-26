@@ -187,7 +187,6 @@ class _LessonScreenState extends State<LessonScreen> {
                   child: switch (_phase) {
                     _LessonPhase.learn => _LearnStep(
                         key: const ValueKey('learn'),
-                        topic: widget.topic,
                         word: _currentWord,
                         speaking: _speaking,
                         onSpeak: () => _speak(_currentWord.word),
@@ -242,14 +241,12 @@ class _LessonScreenState extends State<LessonScreen> {
 class _LearnStep extends StatelessWidget {
   const _LearnStep({
     super.key,
-    required this.topic,
     required this.word,
     required this.speaking,
     required this.onSpeak,
     required this.onSpeakExample,
   });
 
-  final LessonTopic topic;
   final VocabularyWord word;
   final bool speaking;
   final VoidCallback onSpeak;
