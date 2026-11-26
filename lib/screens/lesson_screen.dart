@@ -564,6 +564,7 @@ class _BuildWordStep extends StatelessWidget {
             children: List.generate(letters.length, (index) {
               final used = selectedTileIndexes.contains(index);
               return InkWell(
+                key: ValueKey('letter-tile-$index'),
                 onTap: used ? null : () => onTapLetter(index),
                 borderRadius: BorderRadius.circular(14),
                 child: AnimatedContainer(
