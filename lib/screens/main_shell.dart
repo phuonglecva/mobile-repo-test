@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../state/progress_store.dart';
 import '../widgets/milo_bottom_nav.dart';
-import 'games_screen.dart';
 import 'home_screen.dart';
-import 'learning_path_screen.dart';
-import 'progress_screen.dart';
-import 'rewards_screen.dart';
+import 'onboarding_screen.dart';
+import 'practice_screen.dart';
+import 'profile_screen.dart';
 
 class MainShell extends StatefulWidget {
   const MainShell({super.key});
@@ -19,14 +19,16 @@ class _MainShellState extends State<MainShell> {
 
   final List<Widget> _screens = const [
     HomeScreen(),
-    LearningPathScreen(),
-    GamesScreen(),
-    RewardsScreen(),
-    ProgressScreen(),
+    PracticeScreen(),
+    ProfileScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
+    if (!ProgressStore.instance.isOnboarded) {
+      return OnboardingScreen(onComplete: () => setState(() => _currentIndex = 0));
+    }
+
     return Scaffold(
       body: IndexedStack(index: _currentIndex, children: _screens),
       bottomNavigationBar: MiloBottomNav(
