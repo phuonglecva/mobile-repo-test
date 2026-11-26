@@ -8,7 +8,7 @@ import '../theme/app_colors.dart';
 import '../widgets/milo_character.dart';
 import '../widgets/primary_button.dart';
 
-enum _LessonPhase { learn, quiz, complete }
+enum _LessonPhase { learn, quiz, build, complete }
 
 class LessonScreen extends StatefulWidget {
   const LessonScreen({super.key, required this.topic});
@@ -27,18 +27,26 @@ class _LessonScreenState extends State<LessonScreen> {
   bool _speaking = false;
   bool _savedReward = false;
   bool _earnedRewards = true;
+  final List<int> _selectedTileIndexes = [];
 
   List<VocabularyWord> get _words => widget.topic.words;
   VocabularyWord get _currentWord => _words[_index];
 
   double get _progress {
     if (_phase == _LessonPhase.complete) return 1;
-    if (_phase == _LessonPhase.learn) return .5 * ((_index + 1) / _words.length);
+    if (_phase == _LessonPhase.learn) return .42 * ((_index + 1) / _words.length);
+    if (_phase == _LessonPhase.build) return _buildIsCorrect ? 1 : .94;
     final quizProgress = (_index + (_selectedIndex != null && _isCorrect ? 1 : 0)) / _words.length;
-    return .5 + (.5 * quizProgress);
+    return .42 + (.48 * quizProgress);
   }
 
   bool get _isCorrect => _selectedIndex != null && _choices[_selectedIndex!].word == _currentWord.word;
+
+  String get _buildTarget => _words.first.word.toUpperCase();
+  List<String> get _buildTiles => _buildTarget.split('').reversed.toList();
+  String get _builtWord => _selectedTileIndexes.map((index) => _buildTiles[index]).join();
+  bool get _buildIsFull => _selectedTileIndexes.length == _buildTiles.length;
+  bool get _buildIsCorrect => _builtWord == _buildTarget;
 
   List<VocabularyWord> get _choices {
     final length = _words.length;
@@ -101,8 +109,28 @@ class _LessonScreenState extends State<LessonScreen> {
         _selectedIndex = null;
       });
     } else {
-      await _finishLesson();
+      setState(() {
+        _phase = _LessonPhase.build;
+        _index = 0;
+        _selectedIndex = null;
+        _selectedTileIndexes.clear();
+      });
     }
+  }
+
+  void _tapLetter(int index) {
+    if (_selectedTileIndexes.contains(index) || _buildIsFull) return;
+    setState(() => _selectedTileIndexes.add(index));
+    HapticFeedback.selectionClick();
+  }
+
+  void _undoLetter() {
+    if (_selectedTileIndexes.isEmpty) return;
+    setState(() => _selectedTileIndexes.removeLast());
+  }
+
+  void _resetLetters() {
+    setState(_selectedTileIndexes.clear);
   }
 
   Future<void> _finishLesson() async {
@@ -131,6 +159,7 @@ class _LessonScreenState extends State<LessonScreen> {
     final phaseLabel = switch (_phase) {
       _LessonPhase.learn => 'LÀM QUEN TỪ MỚI',
       _LessonPhase.quiz => 'THỬ TÀI GHI NHỚ',
+      _LessonPhase.build => 'GHÉP CHỮ THẦN TỐC',
       _LessonPhase.complete => 'NHIỆM VỤ HOÀN THÀNH',
     };
 
@@ -201,6 +230,18 @@ class _LessonScreenState extends State<LessonScreen> {
                         onChoose: _choose,
                         onListen: () => _speak(_currentWord.word),
                       ),
+                    _LessonPhase.build => _BuildWordStep(
+                        key: const ValueKey('build'),
+                        topic: widget.topic,
+                        word: _words.first,
+                        letters: _buildTiles,
+                        selectedTileIndexes: _selectedTileIndexes,
+                        builtWord: _builtWord,
+                        isFull: _buildIsFull,
+                        isCorrect: _buildIsCorrect,
+                        onTapLetter: _tapLetter,
+                        onUndo: _undoLetter,
+                      ),
                     _LessonPhase.complete => _CompleteStep(
                         key: const ValueKey('complete'),
                         topic: widget.topic,
@@ -227,6 +268,23 @@ class _LessonScreenState extends State<LessonScreen> {
                 )
               else if (_phase == _LessonPhase.quiz)
                 const Text('Bé chọn một đáp án nhé!',
+                    style: TextStyle(color: AppColors.muted, fontSize: 12, fontWeight: FontWeight.w700))
+              else if (_phase == _LessonPhase.build && _buildIsCorrect)
+                PrimaryButton(
+                  label: 'Hoàn thành bài học',
+                  onPressed: _finishLesson,
+                  icon: Icons.emoji_events_rounded,
+                  color: AppColors.mint,
+                )
+              else if (_phase == _LessonPhase.build && _buildIsFull)
+                PrimaryButton(
+                  label: 'Thử lại nhé',
+                  onPressed: _resetLetters,
+                  icon: Icons.refresh_rounded,
+                  color: AppColors.orange,
+                )
+              else if (_phase == _LessonPhase.build)
+                const Text('Chạm các chữ cái theo đúng thứ tự nhé!',
                     style: TextStyle(color: AppColors.muted, fontSize: 12, fontWeight: FontWeight.w700))
               else
                 const SizedBox(height: 54),
@@ -428,6 +486,122 @@ class _QuizStep extends StatelessWidget {
             Text(correct ? 'Milo tự hào về bé!' : 'Mình thử lại một lần nữa nhé.',
                 style: const TextStyle(color: AppColors.muted, fontSize: 11)),
           ],
+        ],
+      ),
+    );
+  }
+}
+
+
+class _BuildWordStep extends StatelessWidget {
+  const _BuildWordStep({
+    super.key,
+    required this.topic,
+    required this.word,
+    required this.letters,
+    required this.selectedTileIndexes,
+    required this.builtWord,
+    required this.isFull,
+    required this.isCorrect,
+    required this.onTapLetter,
+    required this.onUndo,
+  });
+
+  final LessonTopic topic;
+  final VocabularyWord word;
+  final List<String> letters;
+  final List<int> selectedTileIndexes;
+  final String builtWord;
+  final bool isFull;
+  final bool isCorrect;
+  final ValueChanged<int> onTapLetter;
+  final VoidCallback onUndo;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(19),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(28)),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text('Ghép các chữ cái để tạo thành từ',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: AppColors.ink, fontSize: 17, fontWeight: FontWeight.w900)),
+          const SizedBox(height: 12),
+          Text(word.emoji, style: const TextStyle(fontSize: 67)),
+          const SizedBox(height: 4),
+          Text(word.meaning,
+              style: const TextStyle(color: AppColors.muted, fontSize: 13, fontWeight: FontWeight.w700)),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(letters.length, (index) {
+              final filled = index < builtWord.length;
+              return Container(
+                width: 43,
+                height: 50,
+                margin: const EdgeInsets.symmetric(horizontal: 3),
+                decoration: BoxDecoration(
+                  color: filled ? topic.softColor : AppColors.canvas,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: filled ? topic.color : const Color(0xFFE5EAF0), width: 1.5),
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  filled ? builtWord[index] : '',
+                  style: TextStyle(color: topic.color, fontSize: 21, fontWeight: FontWeight.w900),
+                ),
+              );
+            }),
+          ),
+          const SizedBox(height: 22),
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 8,
+            runSpacing: 9,
+            children: List.generate(letters.length, (index) {
+              final used = selectedTileIndexes.contains(index);
+              return InkWell(
+                onTap: used ? null : () => onTapLetter(index),
+                borderRadius: BorderRadius.circular(14),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 160),
+                  width: 46,
+                  height: 52,
+                  decoration: BoxDecoration(
+                    color: used ? const Color(0xFFF0F3F7) : topic.softColor,
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: used ? const Color(0xFFE7EBF0) : topic.color.withOpacity(.25), width: 1.5),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    used ? '' : letters[index],
+                    style: TextStyle(color: topic.color, fontSize: 21, fontWeight: FontWeight.w900),
+                  ),
+                ),
+              );
+            }),
+          ),
+          const SizedBox(height: 12),
+          if (isCorrect)
+            const Text('Chính xác! Bé ghép từ thật giỏi! 🎉',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Color(0xFF22A879), fontSize: 13, fontWeight: FontWeight.w900))
+          else if (isFull)
+            const Text('Gần đúng rồi! Mình thử lại nhé 💛',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: AppColors.orange, fontSize: 12, fontWeight: FontWeight.w800))
+          else
+            const Text('Chạm vào từng chữ cái để xếp từ nhé.',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: AppColors.muted, fontSize: 11, fontWeight: FontWeight.w700)),
+          TextButton.icon(
+            onPressed: selectedTileIndexes.isEmpty ? null : onUndo,
+            icon: const Icon(Icons.undo_rounded, size: 16),
+            label: const Text('Lùi một chữ'),
+          ),
         ],
       ),
     );
