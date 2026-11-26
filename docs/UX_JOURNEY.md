@@ -7,7 +7,7 @@ Milo English is a friendly, guided English-learning adventure for Vietnamese pri
 ## Primary journey
 
 1. **Welcome** — child enters a display name, school grade (1–5) and companion avatar. This profile is stored only on the device.
-2. **Adventure Map** — the map is the home screen. The next available world is visually highlighted; completed worlds show a check; future worlds remain locked until the previous world is complete.
+2. **Adventure Map** — the map is the home screen. A winding route guides the child from one world to the next; the next available world is highlighted, completed worlds show a check, and future worlds remain locked until the previous world is complete.
 3. **Learn** — a short picture-led vocabulary sequence. Each word has a Vietnamese meaning, an example sentence and English text-to-speech.
 4. **Play** — the child hears a word and selects the matching picture. Correct answers receive positive feedback. Wrong answers are gentle and can be retried without losing progress.
 5. **Celebrate** — completing a world awards 3 stars, 10 coins and 25 XP, then unlocks the next world.
