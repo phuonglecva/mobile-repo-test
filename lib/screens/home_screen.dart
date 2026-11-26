@@ -333,7 +333,7 @@ class _AdventurePath extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          left: labelLeft.clamp(0.0, width - labelWidth),
+                          left: labelLeft.clamp(0.0, width - labelWidth).toDouble(),
                           top: center.dy - 31,
                           width: labelWidth,
                           child: _AdventureNodeLabel(
