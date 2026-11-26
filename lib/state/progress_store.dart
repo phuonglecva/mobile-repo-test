@@ -141,16 +141,20 @@ class ProgressStore extends ChangeNotifier {
   }
 
   Future<void> completeTopic({required String topicId, required int words}) async {
-    if (_completedTopics.add(topicId)) {
+    final isFirstCompletion = _completedTopics.add(topicId);
+    if (isFirstCompletion) {
       _stars += 3;
       _coins += 10;
       _xp += 25;
       _lessonsCompleted += 1;
       _wordsLearned += words;
-      _recordStudyDay();
-      await _save();
-      notifyListeners();
     }
+
+    // A replay is still meaningful practice: count it toward the daily habit
+    // and weekly goal, while keeping one-time world rewards idempotent.
+    _recordStudyDay();
+    await _save();
+    notifyListeners();
   }
 
   Future<void> completeLesson({int words = 3}) async {
