@@ -38,7 +38,7 @@ The UI keeps one primary action visible at a time. Progress is shown at the top 
 
 - Alphabet is the first available world.
 - Completing a world unlocks the next world.
-- Replaying an already completed world does not award duplicate completion rewards.
+- Replaying an already completed world does not award duplicate completion rewards, but it still counts as a practice session for the daily habit, streak and weekly goal.
 - Progress, profile, stars, coins, XP, completed worlds and streak are stored locally with SharedPreferences.
 - Daily streak increments when the learner completes their first world on a new consecutive calendar day.
 
